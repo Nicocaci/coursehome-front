@@ -1,0 +1,259 @@
+.home {
+    color: rgb(0, 0, 0);
+}
+
+.foto-container {
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.video-home {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.foto-home {
+    height: 95dvh;
+    width: 100%;
+}
+
+.card-container {
+    height: 60dvh;
+    padding: 30px;
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    background-color: black;
+}
+
+.card {
+    width: 300px;
+}
+
+.img-card {
+    width: 100%;
+    height: 400px;
+    display: block;
+
+}
+
+.card-description {
+    font-size: 18px;
+    padding: 5px;
+    background-color: rgb(235, 232, 232);
+}
+
+.categories-container {
+    display: flex;
+    justify-content: flex-start;
+    gap: 50px;
+    flex-direction: column;
+    align-items: center;
+    height: 60dvh;
+    background-color: #a29684;
+}
+
+.titulo-categories {
+    font-size: 30px;
+    font-weight: bold;
+    color: white;
+    margin-top: 3%;
+}
+
+.card-categories-container {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+
+.card-titulo {
+    font-size: 20px;
+    font-weight: bold;
+    color: #000;
+    background-color: rgba(255, 255, 255, 0.9);
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    padding: 10px;
+    text-align: center;
+    z-index: 2;
+}
+
+.card-categories-mesa {
+    background-color: white;
+    border-radius: 10px;
+    font-weight: bold;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    width: 300px;
+    height: 300px;
+    background-image: url('/categoria-mesa.jpg');
+    background-size: cover;
+    /* ocupa todo el contenedor */
+    background-position: center;
+    /* centra la imagen */
+    background-repeat: no-repeat;
+    position: relative;
+    /* 🔴 CLAVE */
+    overflow: hidden;
+    /* opcional, queda más prolijo */
+}
+
+.card-categories-mesa:hover {
+    transform: scale(1.1);
+}
+
+.card-categories-textiles {
+    background-color: white;
+    border-radius: 10px;
+    font-weight: bold;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    width: 300px;
+    height: 300px;
+    background-image: url('/categoria-textiles.jpg');
+    background-size: cover;
+    /* ocupa todo el contenedor */
+    background-position: center;
+    /* centra la imagen */
+    background-repeat: no-repeat;
+        position: relative;
+    /* 🔴 CLAVE */
+    overflow: hidden;
+    /* opcional, queda más prolijo */
+}
+
+.card-categories-textiles:hover {
+    transform: scale(1.1);
+}
+
+.card-categories-jardin {
+    background-color: white;
+    border-radius: 10px;
+    font-weight: bold;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    width: 300px;
+    height: 300px;
+    background-image: url('/categoria-parrilla.jpg');
+    background-size: cover;
+    /* ocupa todo el contenedor */
+    background-position: center;
+    /* centra la imagen */
+    background-repeat: no-repeat;
+        position: relative;
+    /* 🔴 CLAVE */
+    overflow: hidden;
+    /* opcional, queda más prolijo */
+
+}
+
+.card-categories-jardin:hover {
+    transform: scale(1.1);
+}
+
+.card-categories-cocina {
+    background-color: white;
+    border-radius: 10px;
+    font-weight: bold;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    width: 300px;
+    height: 300px;
+    background-image: url('/categoria-cocina.jpg');
+    background-size: cover;
+    /* ocupa todo el contenedor */
+    background-position: center;
+    /* centra la imagen */
+    background-repeat: no-repeat;
+        position: relative;
+    /* 🔴 CLAVE */
+    overflow: hidden;
+    /* opcional, queda más prolijo */
+}
+
+.card-categories-cocina:hover {
+    transform: scale(1.1);
+}
+
+.card-categories-deco {
+    background-color: white;
+    border-radius: 10px;
+    font-weight: bold;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    width: 300px;
+    height: 300px;
+    background-image: url('/categoria-deco.jpg');
+    background-size: cover;
+    /* ocupa todo el contenedor */
+    background-position: center;
+    /* centra la imagen */
+    background-repeat: no-repeat;
+        position: relative;
+    /* 🔴 CLAVE */
+    overflow: hidden;
+    /* opcional, queda más prolijo */
+}
+
+.card-categories-deco:hover {
+    transform: scale(1.1);
+}
+
+
+
+
+
+
+
+
+.contacto-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 40dvh;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/fondo-contacto.jpg');
+    background-size: cover;
+    /* ocupa todo el contenedor */
+    background-position: center;
+    /* centra la imagen */
+    background-repeat: no-repeat;
+    color: white;
+    gap: 10px;
+}
+
+.btn-contacto {
+    padding: 10px 20px;
+    background-color: #ff6600;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    width: 300px;
+}
+
+.btn-contacto:hover {
+    background-color: #ff9933;
+}
+
+.titulo-contacto {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.subtitulo-contacto {
+    font-size: 18px;
+}

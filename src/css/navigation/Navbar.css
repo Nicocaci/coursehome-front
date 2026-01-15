@@ -1,0 +1,41 @@
+.navbar-container{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background-color: #e5d4c4;
+}
+.navbar-div-content-1 {
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+    background-color: #000000;
+    color:#ffffff;
+    padding: 5px 30px 5px 30px;
+}
+.navbar-div-content-2 {
+    display: flex;
+    width: 100%;
+    background-color: #e5d4c4;
+    color:#000000;
+    padding: 10px 30px 10px 50px;
+}
+.logo-home{
+    height: 150px;
+    width: 150px
+}
+.ul-div{
+    list-style: none;
+    display: flex;
+    gap: 100px;
+    color: #ffffff;
+}
+.ul-div-2{
+    list-style: none;
+    display: flex;
+    gap: 100px;
+    color: #000000;
+}
+.li-none{
+    text-decoration: none;
+    color: #ffffff;
+}
