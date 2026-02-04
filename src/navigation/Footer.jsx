@@ -8,7 +8,7 @@ const Footer = () => {
                 <img className='logo-footer' src="/logo-wp.jpeg" alt="logo" />
             </div>
             <div>
-                <p className='titulo-footer'>COURSE HOME || HOME & DECO </p>
+                <p className='titulo-footer'>CF || HOME & DECO </p>
                 <ul className='li-footer'>
                     <a className='a-none' href="/productos"><li>Productos</li></a>
                     <a className='a-none' href="/faq"><li>Preguntas Frecuentes</li></a>
