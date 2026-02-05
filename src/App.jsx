@@ -10,6 +10,7 @@ import CartDetail from "./pages/CartDetail.jsx";
 import Checkout from "./pages/Checkout/Checkout.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import ProductosPage from "./pages/ProductosPage.jsx";
+import ScrollToTop from "./utils/ScrollToTop.jsx";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext.jsx";
 import { CartProvider } from "./context/CartContext.jsx";
@@ -21,6 +22,7 @@ function App() {
       <AuthProvider>
         <CartProvider>
           <BrowserRouter>
+          <ScrollToTop />
             <div id="root">
               <Navbar />
               <main>
