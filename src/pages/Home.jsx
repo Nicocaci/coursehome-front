@@ -27,7 +27,6 @@ const Home = () => {
         <h1 className="home-title">CF || HOME & DECO</h1>
         <p className="home-subtitle">Tu hogar, nuestro estilo</p>
       </div>  */}
-
       {/* Video */}
       <div className="foto-container">
         <video
@@ -40,7 +39,6 @@ const Home = () => {
           src={videos[current]}
         />
       </div>
-
       {/* Card de Productos */}
       <div className="ofertas-container">
         <h1 className="titulo-ofertas">OFERTAS IMPERDIBLES</h1>
@@ -82,26 +80,35 @@ const Home = () => {
           </div>
         </div>
       </div>
-
       {/* Categories */}
       <div className="categories-container">
         <p className="titulo-categories">Categorias Destacadas</p>
         <div className="card-categories-container">
-          <div className="card-categories-mesa">
-            <p className="card-titulo">MESA</p>
-          </div>
-          <div className="card-categories-textiles">
-            <p className="card-titulo">TEXTILES</p>
-          </div>
-          <div className="card-categories-jardin">
-            <p className="card-titulo">JARDÍN</p>
-          </div>
-          <div className="card-categories-cocina">
-            <p className="card-titulo">COCÍNA</p>
-          </div>
-          <div className="card-categories-deco">
-            <p className="card-titulo">DECO</p>
-          </div>
+          <Link to={"/productos?category=Mesa&page=1"}>
+            <div className="card-categories-mesa">
+              <p className="card-titulo">MESA</p>
+            </div>
+          </Link>
+          <Link to={"/productos?category=Textiles&page=1"}>
+            <div className="card-categories-textiles">
+              <p className="card-titulo">TEXTILES</p>
+            </div>
+          </Link>
+          <Link to={"/productos?category=Jardín&page=1"}>
+            <div className="card-categories-jardin">
+              <p className="card-titulo">JARDÍN</p>
+            </div>
+          </Link>
+          <Link to={"/productos?category=Cocina&page=1"}>
+            <div className="card-categories-cocina">
+              <p className="card-titulo">COCÍNA</p>
+            </div>
+          </Link>
+          <Link to={"/productos?category=Deco&page=1"}>
+            <div className="card-categories-deco">
+              <p className="card-titulo">DECO</p>
+            </div>
+          </Link>
         </div>
       </div>
 

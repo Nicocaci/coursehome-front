@@ -141,11 +141,28 @@ const Navbar = () => {
           Ver categorías
         </button>
         <ul className={`ul-div-2 ${categoriasOpen ? "open" : ""}`}>
-          <li>MESA</li>
-          <li>TEXTILES</li>
-          <li>JARDÍN</li>
-          <li>COCINA</li>
-          <li>DECO</li>
+          <Link
+            className="li-none-black"
+            to={"/productos?category=Mesa&page=1"}
+          >
+            <li>MESA</li>
+          </Link>
+          <Link to={"/productos?category=Textiles&page=1"}
+          className="li-none-black">
+            <li>TEXTILES</li>
+          </Link>
+          <Link to={"/productos?category=Jardín&page=1"}
+          className="li-none-black">
+            <li>JARDÍN</li>
+          </Link>
+          <Link to={"/productos?category=Cocina&page=1"}
+          className="li-none-black">
+            <li>COCINA</li>
+          </Link>
+          <Link to={"/productos?category=Deco&page=1"}
+          className="li-none-black">
+            <li>DECO</li>
+          </Link>
           <li>
             <Link className="li-none-black" to={"/productos"}>
               PRODUCTOS

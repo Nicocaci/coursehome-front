@@ -4,7 +4,7 @@ const Faq = () => {
   return (
     <div>
         <h1>
-            Hola, soy el Faq
+            Faq
         </h1>
     </div>
   )

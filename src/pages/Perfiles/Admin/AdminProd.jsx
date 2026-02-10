@@ -541,6 +541,7 @@ const AdminProd = ({ user }) => {
         <form
           onSubmit={editingProduct ? handleUpdateProduct : handleSubmitProduct}
           className="profile-form"
+          enctype="multipart/form-data"
         >
           <div className="form-group">
             <label htmlFor="sku">SKU *</label>
