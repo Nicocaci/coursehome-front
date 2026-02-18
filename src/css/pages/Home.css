@@ -243,14 +243,10 @@
     height: 300px;
     background-image: url('/categoria-deco.jpg');
     background-size: cover;
-    /* ocupa todo el contenedor */
     background-position: center;
-    /* centra la imagen */
     background-repeat: no-repeat;
-        position: relative;
-    /* 🔴 CLAVE */
+    position: relative;
     overflow: hidden;
-    /* opcional, queda más prolijo */
 }
 
 .card-categories-deco:hover {
@@ -275,7 +271,7 @@
 
 .btn-contacto {
     padding: 10px 20px;
-    background-color: #ff6600;
+    background-color:  #C2B280;
     color: white;
     border: none;
     border-radius: 5px;
@@ -286,7 +282,8 @@
 }
 
 .btn-contacto:hover {
-    background-color: #ff9933;
+    background-color: #c7bd9e;
+    color: #000000;
 }
 
 .titulo-contacto {
