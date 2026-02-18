@@ -172,7 +172,7 @@ const Navbar = () => {
         <div className="navbar-flex-cart">
           <div className="navbar-cart-wrapper">
             <button className="btn-cart" onClick={handleCartIconClick}>
-              <FaShoppingCart size={"30px"} />
+              <FaShoppingCart color="#000000" size={"30px"} />
               {cartItemsCount > 0 && (
                 <span className="cart-count">{cartItemsCount}</span>
               )}

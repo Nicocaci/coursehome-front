@@ -2,7 +2,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'poppins';
+  font-family: "poppins";
 }
 
 .center {
@@ -11,7 +11,9 @@
 }
 
 /* Footer Style */
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
 }
 
@@ -23,4 +25,19 @@ html, body, #root {
 
 main {
   flex: 1; /* Empuja el footer al fondo */
+}
+input,
+textarea,
+select,
+button {
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 0;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  box-shadow: none;
 }
