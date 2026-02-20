@@ -57,7 +57,7 @@ const Contacto = () => {
           <FaWhatsapp size={"30px"} />
         </p>
         <p className="wp-contacto">
-          O llamanos al <strong>11 2345-6789</strong> <FcIphone size={"30px"} />
+          O llamanos al <strong>11 2345-6789</strong> <FcIphone color="black" size={"30px"} />
         </p>
       </div>
 

@@ -1,8 +1,6 @@
-import React from "react";
-import { useState, useContext, useEffect, useRef } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import AuthModal from "../components/AuthModal.jsx";
 import { AuthContext } from "../context/AuthContext.jsx";
-import axiosInstance from "../utils/axiosConfig.js";
 import "../css/navigation/Navbar.css";
 import { Link, useNavigate } from "react-router-dom";
 import { FaShoppingCart } from "react-icons/fa";
@@ -13,178 +11,176 @@ import { useCart } from "../context/CartContext.jsx";
 const Navbar = () => {
   const { isAuthenticated, logOut } = useContext(AuthContext);
   const { cart } = useCart();
-  const [showAuthModal, setShowAuthModal] = useState(false);
-  const [showCartDropdown, setShowCartDropdown] = useState(false);
-  const [showProductsDropdown, setShowProductsDropdown] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [categoriasOpen, setCategoriasOpen] = useState(false);
   const navigate = useNavigate();
 
-  const handleUserIconClick = () => {
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [showCartDropdown, setShowCartDropdown] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [categoriasOpen, setCategoriasOpen] = useState(false);
+
+  const menuRef = useRef(null);
+  const categoriasRef = useRef(null);
+
+  const cartItemsCount =
+    cart?.products?.reduce((acc, p) => acc + (p.quantity || 0), 0) || 0;
+
+  // -------------------------
+  // HANDLERS
+  // -------------------------
+
+  const handleUserClick = () => {
     if (!isAuthenticated) {
       setShowAuthModal(true);
     } else {
       navigate("/perfil");
     }
   };
-  const handleCartIconClick = () => {
-    setShowCartDropdown((prev) => !prev);
-  };
-  const handleCloseModal = () => setShowAuthModal(false);
-  const cartItemsCount =
-    cart?.products?.reduce((acc, p) => acc + (p.quantity || 0), 0) || 0;
 
-  const dropdownRef = useRef(null);
-  const hideTimeoutRef = useRef(null);
-
-  const openDropdown = () => {
-    if (hideTimeoutRef.current) {
-      clearTimeout(hideTimeoutRef.current);
-      hideTimeoutRef.current = null;
-    }
-    setShowProductsDropdown(true);
+  const handleCloseMenus = () => {
+    setMenuOpen(false);
+    setCategoriasOpen(false);
   };
 
-  // Close dropdown when clicking outside
+  const toggleMenu = () => {
+    setMenuOpen((prev) => !prev);
+    setCategoriasOpen(false);
+  };
+
+  const toggleCategorias = () => {
+    setCategoriasOpen((prev) => !prev);
+    setMenuOpen(false);
+  };
+
+  // -------------------------
+  // CLOSE ON CLICK OUTSIDE
+  // -------------------------
+
   useEffect(() => {
-    const handleDocumentClick = (e) => {
-      if (!dropdownRef.current) return;
-      if (!dropdownRef.current.contains(e.target)) {
-        setShowProductsDropdown(false);
+    const handleClickOutside = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setMenuOpen(false);
+      }
+
+      if (categoriasRef.current && !categoriasRef.current.contains(e.target)) {
+        setCategoriasOpen(false);
       }
     };
 
-    if (showProductsDropdown) {
-      document.addEventListener("mousedown", handleDocumentClick);
-    }
-
-    return () => document.removeEventListener("mousedown", handleDocumentClick);
-  }, [showProductsDropdown]);
-
-  // Close dropdown on Escape
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === "Escape") setShowProductsDropdown(false);
-    };
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  // -------------------------
+  // CLOSE CART ON SCROLL
+  // -------------------------
+
   useEffect(() => {
     if (!showCartDropdown) return;
 
-    const handleScroll = () => {
-      setShowCartDropdown(false);
-    };
-
+    const handleScroll = () => setShowCartDropdown(false);
     window.addEventListener("scroll", handleScroll);
 
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+    return () => window.removeEventListener("scroll", handleScroll);
   }, [showCartDropdown]);
 
   return (
     <div className="navbar-container">
+      {/* ---------------- LEFT MENU ---------------- */}
       <div className="navbar-div-content-1">
-        <ul className={`ul-div ${menuOpen ? "open" : ""}`}>
-          <li>
-            <Link className="li-none" to={"/contacto"}>
+        <ul ref={menuRef} className={`ul-div ${menuOpen ? "open" : ""}`}>
+          <li >
+            <Link className="li-none"  to="/contacto" onClick={handleCloseMenus}>
               Contacto
             </Link>
           </li>
           <li>
-            <Link className="li-none" to={"/nosotros"}>
+            <Link className="li-none" to="/nosotros" onClick={handleCloseMenus}>
               Nosotros
             </Link>
           </li>
           <li>
-            <Link className="li-none" to={"/faq"}>
+            <Link className="li-none" to="/faq" onClick={handleCloseMenus}>
               Preguntas Frecuentes
             </Link>
           </li>
-          <li
-            className="btn-logout"
-            onClick={handleUserIconClick}
-            title={isAuthenticated ? "Mi cuenta" : "Iniciar sesión"}
-          >
-            Mi Perfil
-          </li>
-          <li>
-            {isAuthenticated && (
-              <button className="btn-logout" onClick={logOut}>
-                <Link className="li-none" to={"/"}>
-                  Cerrar Sesión
-                </Link>
+
+          <li onClick={handleUserClick}>Mi Perfil</li>
+
+          {isAuthenticated && (
+            <li>
+              <button
+                className="btn-logout"
+                onClick={() => {
+                  logOut();
+                  handleCloseMenus();
+                }}
+              >
+                Cerrar Sesión
               </button>
-            )}
-          </li>
+            </li>
+          )}
         </ul>
-        {/* BOTON HAMBUREGUESA */}
-        <button
-          className="hamburger-btn"
-          onClick={() => setMenuOpen(!menuOpen)}
-        >
+
+        <button className="hamburger-btn" onClick={toggleMenu}>
           {menuOpen ? <FiX /> : <FiMenu color="#ffffff" />}
         </button>
       </div>
+
+      {/* ---------------- LOGO ---------------- */}
       <div className="navbar-logo-content">
-        <Link to={"/"}>
-          <img className="logo-home" src="/logo-wp.jpeg" alt="logo-course" />
+        <Link to="/" onClick={handleCloseMenus}>
+          <img className="logo-home" src="/logo-wp.jpeg" alt="logo" />
         </Link>
       </div>
+
+      {/* ---------------- RIGHT SIDE ---------------- */}
       <div className="navbar-div-content-2">
-        {/* BOTON MOBILE */}
-        <button
-          className="categorias-btn"
-          onClick={() => setCategoriasOpen(!categoriasOpen)}
-        >
+        <button className="categorias-btn" onClick={toggleCategorias}>
           Ver categorías
         </button>
-        <ul className={`ul-div-2 ${categoriasOpen ? "open" : ""}`}>
-          <Link
-            className="li-none-black"
-            to={"/productos?category=Mesa&page=1"}
-          >
-            <li>MESA</li>
-          </Link>
-          <Link to={"/productos?category=Textiles&page=1"}
-          className="li-none-black">
-            <li>TEXTILES</li>
-          </Link>
-          <Link to={"/productos?category=Jardín&page=1"}
-          className="li-none-black">
-            <li>JARDÍN</li>
-          </Link>
-          <Link to={"/productos?category=Cocina&page=1"}
-          className="li-none-black">
-            <li>COCINA</li>
-          </Link>
-          <Link to={"/productos?category=Deco&page=1"}
-          className="li-none-black">
-            <li>DECO</li>
-          </Link>
+
+        <ul
+          ref={categoriasRef}
+          className={`ul-div-2 ${categoriasOpen ? "open" : ""}`}
+        >
+          {["Mesa", "Textiles", "Jardín", "Cocina", "Deco"].map((cat) => (
+            <li key={cat}>
+              <Link
+                className="li-none-black"
+                to={`/productos?category=${cat}&page=1`}
+                onClick={handleCloseMenus}
+              >
+                {cat.toUpperCase()}
+              </Link>
+            </li>
+          ))}
+
           <li>
-            <Link className="li-none-black" to={"/productos"}>
+            <Link className="li-none-black" to="/productos" onClick={handleCloseMenus}>
               PRODUCTOS
             </Link>
           </li>
         </ul>
+
+        {/* CART */}
         <div className="navbar-flex-cart">
-          <div className="navbar-cart-wrapper">
-            <button className="btn-cart" onClick={handleCartIconClick}>
-              <FaShoppingCart color="#000000" size={"30px"} />
-              {cartItemsCount > 0 && (
-                <span className="cart-count">{cartItemsCount}</span>
-              )}
-            </button>
-            {showCartDropdown && (
-              <CartDropdown onClose={() => setShowCartDropdown(false)} />
+          <button
+            className="btn-cart"
+            onClick={() => setShowCartDropdown((prev) => !prev)}
+          >
+            <FaShoppingCart size="30px" />
+            {cartItemsCount > 0 && (
+              <span className="cart-count">{cartItemsCount}</span>
             )}
-          </div>
+          </button>
+
+          {showCartDropdown && (
+            <CartDropdown onClose={() => setShowCartDropdown(false)} />
+          )}
         </div>
       </div>
 
-      {showAuthModal && <AuthModal onClose={handleCloseModal} />}
+      {showAuthModal && <AuthModal onClose={() => setShowAuthModal(false)} />}
     </div>
   );
 };
