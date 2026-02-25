@@ -7,21 +7,16 @@ import {
 } from "react";
 import { AuthContext } from "./AuthContext.jsx";
 import axiosInstance from "../utils/axiosConfig.js";
-import { jwtDecode } from "jwt-decode";
-import Cookies from "js-cookie";
 
-const TOKEN_KEY = "access_token";
-const API_PATH = "/api/carts";
+const LOCAL_CART_KEY = "guest_cart";
 
 export const CartContext = createContext();
 
 export const useCart = () => {
   const context = useContext(CartContext);
-
   if (!context) {
-    throw new Error(" useCart debe usarse dentro de un CartProvider");
+    throw new Error("useCart debe usarse dentro de un CartProvider");
   }
-
   return context;
 };
 
@@ -31,405 +26,243 @@ export const CartProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const buildHeaders = useCallback(() => {
-    const headers = {};
+  // =============================
+  // 🟡 LOCAL CART
+  // =============================
 
-    // Usar primero el token del contexto y, como fallback, el de la cookie
-    const token = user?.token || Cookies.get(TOKEN_KEY);
+  const getLocalCart = () => {
+    const stored = localStorage.getItem(LOCAL_CART_KEY);
+    return stored ? JSON.parse(stored) : { products: [] };
+  };
 
-    if (token) {
-      headers.Authorization = `Bearer ${token}`;
+  const saveLocalCart = (cartData) => {
+    localStorage.setItem(LOCAL_CART_KEY, JSON.stringify(cartData));
+    setCart(cartData);
+  };
+
+  const removeFromLocalCart = (productId) => {
+    const guestCart = getLocalCart();
+    guestCart.products = guestCart.products.filter((p) => p._id !== productId);
+    saveLocalCart(guestCart);
+    return guestCart;
+  };
+
+  const updateLocalQuantity = (productId, quantity) => {
+    const guestCart = getLocalCart();
+
+    if (quantity === 0) {
+      return removeFromLocalCart(productId);
     }
-    return headers;
-  }, [user]);
 
-  const request = useCallback(
-    async (path, { method = "GET", body } = {}) => {
-      setLoading(true);
-      setError(null);
+    guestCart.products = guestCart.products.map((p) =>
+      p._id === productId ? { ...p, quantity } : p,
+    );
 
-      try {
-        const response = await axiosInstance.request({
-          method,
-          url: `${API_PATH}${path}`,
-          data: body,
-          headers: buildHeaders(),
-        });
-        return response.data;
-      } catch (error) {
-        console.error("Cart API error:", error);
-        const errorMessage =
-          error.response?.data?.message ||
-          error.message ||
-          `Error ${err.response?.status || "desconocido"}`;
-        setError(errorMessage);
-        throw new Error(errorMessage);
-      } finally {
-        setLoading(false);
-      }
-    },
-    [buildHeaders],
-  );
+    saveLocalCart(guestCart);
+    return guestCart;
+  };
 
-  const createCart = useCallback(
-    async (payload = {}) => {
-      const data = await request("/", { method: "POST", body: payload });
-      setCart(data);
-      return data;
-    },
-    [request],
-  );
+  const clearLocalCart = () => {
+    const empty = { products: [] };
+    localStorage.setItem(LOCAL_CART_KEY, JSON.stringify(empty));
+    setCart(empty);
+    return empty;
+  };
+
+  // =============================
+  // 🟢 REQUEST HELPER
+  // =============================
+
+  const request = useCallback(async (method, url, body) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await axiosInstance({
+        method,
+        url,
+        data: body,
+      });
+      return res.data;
+    } catch (err) {
+      const message =
+        err.response?.data?.message || err.message || "Error en carrito";
+      setError(message);
+      throw new Error(message);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  // =============================
+  // 🟢 GET CART
+  // =============================
 
   const getCart = useCallback(async () => {
-    const data = await request("/");
-
-    // Si el backend devuelve un array de carritos, buscamos el del usuario actual
-    if (Array.isArray(data)) {
-      console.log("getCart - Se recibió un array de carritos:", data);
-      console.log("getCart - ID del usuario actual:", user?.id);
-
-      // Si tenemos el ID del usuario, buscamos su carrito
-      if (user?.id) {
-        // Convertir ambos IDs a string para comparar correctamente
-        const userIdStr = String(user.id);
-        const userCart = data.find((cart) => {
-          const cartUserId = cart.user?._id || cart.user?.id || cart.user;
-          const cartUserIdStr = String(cartUserId);
-          return cartUserIdStr === userIdStr;
-        });
-
-        if (userCart) {
-          console.log("getCart - Carrito del usuario encontrado:", userCart);
-          setCart(userCart);
-          return userCart;
-        } else {
-          console.warn(
-            "getCart - No se encontró carrito para el usuario:",
-            userIdStr,
-          );
-        }
-      }
-
-      // Si no encontramos el carrito del usuario, intentamos usar el primer carrito con productos
-      const cartWithProducts = data.find(
-        (cart) => cart.products && cart.products.length > 0,
-      );
-      if (cartWithProducts) {
-        console.log(
-          "getCart - Usando carrito con productos (fallback):",
-          cartWithProducts,
-        );
-        setCart(cartWithProducts);
-        return cartWithProducts;
-      }
-
-      // Si no hay carritos con productos, devolvemos null
-      console.warn("getCart - No se encontró un carrito válido");
-      setCart(null);
-      return null;
+    if (!user?.token) {
+      const guest = getLocalCart();
+      setCart(guest);
+      return guest;
     }
 
-    // Si es un objeto único, lo usamos directamente
-    console.log("getCart - Se recibió un objeto de carrito:", data);
+    const data = await request("GET", "/api/carts/me");
     setCart(data);
     return data;
-  }, [request, user]);
+  }, [user, request]);
 
-  const getCartById = useCallback(
-    async (cartId) => {
-      if (!cartId) throw new Error("cartId es requerido");
-      const data = await request(`/${cartId}`);
-      setCart(data);
-      return data;
-    },
-    [request],
-  );
-  useEffect(() => {
-    // Cuando el usuario está autenticado, intentamos cargar su carrito
-    if (user?.token) {
-      let cartId = null;
-
-      // 1. Intentar obtener cartId de user.cart (string)
-      if (user.cart && typeof user.cart === "string") {
-        cartId = user.cart;
-      }
-      // 2. Intentar obtener cartId de user.cart (objeto con _id)
-      else if (
-        user.cart &&
-        typeof user.cart === "object" &&
-        !Array.isArray(user.cart) &&
-        user.cart._id
-      ) {
-        // Si es un objeto completo, lo establecemos directamente
-        console.log("Carrito obtenido de user.cart (objeto):", user.cart);
-        setCart(user.cart);
-        return; // Ya tenemos el carrito, no necesitamos hacer más
-      }
-      // 3. Intentar obtener cartId del token decodificado
-      else if (user?.token) {
-        try {
-          const decoded = jwtDecode(user.token);
-          if (decoded?.cart) {
-            if (typeof decoded.cart === "string") {
-              cartId = decoded.cart;
-            } else if (decoded.cart?._id || decoded.cart?.id) {
-              cartId = decoded.cart._id || decoded.cart.id;
-            }
-          }
-        } catch (tokenErr) {
-          console.error("Error al decodificar token:", tokenErr);
-        }
-      }
-
-      // Si tenemos cartId, usar getCartById (más eficiente)
-      if (cartId) {
-        console.log("Obteniendo carrito por ID:", cartId);
-        getCartById(cartId)
-          .then((cartData) => {
-            console.log("Carrito obtenido por ID:", cartData);
-          })
-          .catch((err) => {
-            console.error("Error al obtener carrito por ID:", err);
-            // Si falla, intentar con getCart() como fallback
-            getCart()
-              .then((cartData) => {
-                console.log(
-                  "Carrito obtenido con getCart() (fallback):",
-                  cartData,
-                );
-              })
-              .catch((err2) => {
-                console.error("Error al obtener carrito:", err2);
-              });
-          });
-      } else {
-        // Si no tenemos cartId, usar getCart() como último recurso
-        console.log(
-          "No se encontró cartId, intentando obtener carrito con getCart()",
-        );
-        getCart()
-          .then((cartData) => {
-            console.log("Carrito obtenido del backend:", cartData);
-          })
-          .catch((err) => {
-            console.log("Usuario no tiene carrito asignado aún:", err.message);
-          });
-      }
-    } else {
-      // Si no hay usuario, limpiamos el carrito
-      setCart(null);
-    }
-  }, [user, getCartById, getCart]);
+  // =============================
+  // 🟢 ADD PRODUCT
+  // =============================
 
   const addProductToCart = useCallback(
-    async (productId, quantity = 1) => {
-      if (!productId) {
-        throw new Error("productId es requerido");
-      }
+    async (productId, quantity = 1, productData = null) => {
+      if (!productId) throw new Error("productId es requerido");
 
-      console.log("addProductToCart - Estado actual:", {
-        cart: cart,
-        userCart: user?.cart,
-        userId: user?.id,
-      });
+      // 👤 Invitado
+      if (!user?.token) {
+        const guestCart = getLocalCart();
+        const existing = guestCart.products.find((p) => p._id === productId);
 
-      // Primero intentamos obtener el cartId del estado local
-      let cartId = cart?._id || cart?.id;
-      console.log("addProductToCart - cartId del estado local:", cartId);
-
-      // Si no tenemos cartId del estado, intentamos obtenerlo del user.cart
-      if (!cartId && user?.cart) {
-        if (typeof user.cart === "string") {
-          cartId = user.cart;
-          console.log(
-            "addProductToCart - cartId obtenido de user.cart (string):",
-            cartId,
-          );
-        } else if (user.cart?._id || user.cart?.id) {
-          cartId = user.cart._id || user.cart.id;
-          console.log(
-            "addProductToCart - cartId obtenido de user.cart (objeto):",
-            cartId,
-          );
-        } else if (Array.isArray(user.cart) && user.cart.length > 0) {
-          // Si user.cart es un array, puede que el primer elemento sea el ID
-          cartId = user.cart[0];
-          console.log(
-            "addProductToCart - cartId obtenido de user.cart (array):",
-            cartId,
-          );
+        if (existing) {
+          existing.quantity += quantity;
+        } else {
+          guestCart.products.push({
+            _id: productId,
+            product: productData,
+            quantity,
+          });
         }
+
+        saveLocalCart(guestCart);
+        return guestCart;
       }
 
-      // Si aún no tenemos cartId, intentamos obtenerlo del token decodificado
-      if (!cartId && user?.token) {
-        try {
-          const decoded = jwtDecode(user.token);
-          console.log("addProductToCart - Token decodificado:", decoded);
-          if (decoded?.cart) {
-            if (typeof decoded.cart === "string") {
-              cartId = decoded.cart;
-              console.log(
-                "addProductToCart - cartId obtenido del token (string):",
-                cartId,
-              );
-            } else if (decoded.cart?._id || decoded.cart?.id) {
-              cartId = decoded.cart._id || decoded.cart.id;
-              console.log(
-                "addProductToCart - cartId obtenido del token (objeto):",
-                cartId,
-              );
-            }
-          }
-        } catch (tokenErr) {
-          console.error(
-            "addProductToCart - Error al decodificar token:",
-            tokenErr,
-          );
-        }
-      }
+      // 🟢 Logeado
+      const updated = await request(
+        "POST",
+        `/api/carts/me/products/${productId}`,
+        { quantity },
+      );
 
-      // Si aún no tenemos cartId, intentamos obtener el carrito del usuario desde el backend
-      // Primero intentamos con getCart() que debería devolver el carrito del usuario autenticado
-      if (!cartId) {
-        try {
-          console.log(
-            "addProductToCart - Intentando obtener carrito con getCart()",
-          );
-          const userCart = await getCart();
-          console.log(
-            "addProductToCart - Carrito obtenido con getCart():",
-            userCart,
-          );
-          if (userCart) {
-            cartId = userCart._id || userCart.id;
-            // Actualizamos el estado con el carrito obtenido
-            setCart(userCart);
-          }
-        } catch (err) {
-          console.error(
-            "addProductToCart - Error al obtener carrito con getCart():",
-            err,
-          );
-          // Si getCart() falla y tenemos un cartId del token, intentamos obtener el carrito por ID
-          if (cartId) {
-            try {
-              console.log(
-                "addProductToCart - Obteniendo carrito por ID:",
-                cartId,
-              );
-              const fullCart = await getCartById(cartId);
-              setCart(fullCart);
-            } catch (cartErr) {
-              console.error(
-                "addProductToCart - Error al obtener carrito por ID:",
-                cartErr,
-              );
-              // Si falla, limpiamos el cartId para crear uno nuevo
-              cartId = null;
-            }
-          }
-        }
-      }
-
-      // Solo si después de todos los intentos no tenemos cartId, creamos uno nuevo
-      if (!cartId) {
-        console.warn(
-          "addProductToCart - No se pudo obtener cartId, creando nuevo carrito",
-        );
-        const newCart = await createCart();
-        cartId = newCart?._id || newCart?.id;
-        console.log("addProductToCart - Nuevo carrito creado:", cartId);
-      }
-
-      if (!cartId) {
-        throw new Error("No se pudo obtener o crear un carrito");
-      }
-
-      console.log("addProductToCart - Usando cartId:", cartId);
-
-      // Agregamos el producto al carrito
-      await request(`/${cartId}/products/${productId}`, {
-        method: "POST",
-        body: { quantity },
-      });
-
-      const updatedCart = await getCartById(cartId);
-      setCart(updatedCart);
-      return updatedCart;
+      setCart(updated);
+      return updated;
     },
-    [request, cart, user, createCart, getCart, getCartById, buildHeaders],
+    [user, request],
   );
+
+  // =============================
+  // 🟢 REMOVE PRODUCT
+  // =============================
 
   const removeProductFromCart = useCallback(
     async (cartId, productId) => {
-      if (!cartId || !productId)
-        throw new Error("cartId y productId son requeridos");
+      if (!productId) throw new Error("productId es requerido");
 
-      await request(`/${cartId}/products/${productId}`, {
-        method: "DELETE",
-      });
-
-      const updatedCart = await getCartById(cartId);
-      setCart(updatedCart);
-      return updatedCart;
-    },
-    [request, getCartById],
-  );
-
-  const updateProductQuantity = useCallback(
-    async (cartId, productId, quantity) => {
-      if (!cartId || !productId)
-        throw new Error("cartId y productId son requeridos");
-
-      // Si la cantidad es 0 → eliminar producto
-      if (quantity === 0) {
-        return removeProductFromCart(cartId, productId);
+      if (!user?.token) {
+        return removeFromLocalCart(productId);
       }
 
-      const data = await request(`/${cartId}/products/${productId}`, {
-        method: "PUT",
-        body: { quantity },
-      });
+      const updated = await request(
+        "DELETE",
+        `/api/carts/me/products/${productId}`,
+      );
 
-      setCart(data);
-      return data;
+      setCart(updated);
+      return updated;
     },
-    [request, removeProductFromCart], // ← FALTABA ESTO
+    [user, request],
   );
 
-  const updateCart = useCallback(
-    async (cartId, products = []) => {
-      if (!cartId) throw new Error("cartId es requerido");
-      const data = await request(`/${cartId}`, {
-        method: "PUT",
-        body: { products },
-      });
-      setCart(data);
-      return data;
+  // =============================
+  // 🟢 UPDATE QUANTITY
+  // =============================
+
+  const updateProductQuantity = useCallback(
+    async (productId, quantity) => {
+      if (!productId) throw new Error("productId es requerido");
+
+      if (!user?.token) {
+        return updateLocalQuantity(productId, quantity);
+      }
+
+      if (quantity === 0) {
+        return removeProductFromCart(null, productId);
+      }
+
+      // 1️⃣ Actualización optimista (fluido inmediato)
+      setCart((prev) => ({
+        ...prev,
+        products: prev.products.map((item) => {
+          const id =
+            typeof item.product === "string" ? item.product : item.product?._id;
+
+          if (id === productId) {
+            return { ...item, quantity };
+          }
+
+          return item;
+        }),
+      }));
+
+      // 2️⃣ Sync con backend
+      await request("PUT", `/api/carts/me/products/${productId}`, { quantity });
     },
-    [request],
+    [user, request, removeProductFromCart, updateLocalQuantity],
   );
 
-  const deleteCart = useCallback(
-    async (cartId) => {
-      if (!cartId) throw new Error("cartId es requerido");
-      const data = await request(`/${cartId}`, { method: "DELETE" });
-      setCart(null);
-      return data;
-    },
-    [request],
-  );
+  // =============================
+  // 🟢 CLEAR CART
+  // =============================
 
   const clearCart = useCallback(
     async (cartId) => {
-      if (!cartId) throw new Error("cartId es requerido");
-      const data = await request(`/${cartId}/products`, { method: "DELETE" });
-      setCart(data);
-      return data;
+      if (!user?.token) {
+        return clearLocalCart();
+      }
+
+      const updated = await request("DELETE", "/api/carts/me");
+      setCart(updated);
+      return updated;
     },
-    [request],
+    [user, request],
   );
+
+  // =============================
+  // 🔥 MERGE GUEST → BACKEND
+  // =============================
+
+  const syncGuestCartWithBackend = useCallback(async () => {
+    if (!user?.token) return;
+
+    const guestCart = getLocalCart();
+    if (!guestCart.products.length) return;
+
+    for (const product of guestCart.products) {
+      await request("POST", `/api/carts/me/products/${product._id}`, {
+        quantity: product.quantity,
+      });
+    }
+
+    localStorage.removeItem(LOCAL_CART_KEY);
+  }, [user, request]);
+
+  // =============================
+  // 🚀 INIT
+  // =============================
+
+  useEffect(() => {
+    const initialize = async () => {
+      try {
+        if (user?.token) {
+          await syncGuestCartWithBackend();
+        }
+        await getCart();
+      } catch (err) {
+        console.error("Error inicializando carrito:", err);
+      }
+    };
+
+    initialize();
+  }, [user?.token]);
 
   return (
     <CartContext.Provider
@@ -437,14 +270,14 @@ export const CartProvider = ({ children }) => {
         cart,
         loading,
         error,
-        createCart,
+        createCart: null,
         getCart,
-        getCartById,
+        getCartById: null,
         addProductToCart,
         removeProductFromCart,
         updateProductQuantity,
-        updateCart,
-        deleteCart,
+        updateCart: null,
+        deleteCart: null,
         clearCart,
       }}
     >

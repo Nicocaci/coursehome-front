@@ -104,7 +104,7 @@ const Navbar = () => {
             </Link>
           </li>
 
-          <li onClick={handleUserClick}>Mi Perfil</li>
+          <li className="btn-login" onClick={handleUserClick}>Mi Perfil</li>
 
           {isAuthenticated && (
             <li>

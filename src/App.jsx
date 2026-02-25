@@ -19,9 +19,8 @@ import ScrollToTop from "./utils/ScrollToTop.jsx";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext.jsx";
 import { CartProvider } from "./context/CartContext.jsx";
+import WpButton from "./components/WpButton.jsx";
 import "./App.css";
-
-
 
 function App() {
   return (
@@ -29,7 +28,7 @@ function App() {
       <AuthProvider>
         <CartProvider>
           <BrowserRouter>
-          <ScrollToTop />
+            <ScrollToTop />
             <div id="root">
               <Navbar />
               <main>
@@ -39,28 +38,40 @@ function App() {
                   <Route exact path="/nosotros" element={<Nosotros />} />
                   <Route exact path="/faq" element={<Faq />} />
                   <Route exact path="/productos" element={<ProductosPage />} />
-                  <Route exact path="/faq/como-comprar" element={<ComoComprar />} />
-                  <Route exact path="/faq/como-logear" element={<ComoLogear />} />
-                  <Route exact path="/faq/como-mayorista" element={<ComoMayorista />} />
-                  <Route exact path="/faq/como-cancelo" element={<ComoCancelo />} />
-                  <Route exact path="/faq/metodosPago" element={<MetodosPago/>} />
+                  <Route
+                    exact
+                    path="/faq/como-comprar"
+                    element={<ComoComprar />}
+                  />
+                  <Route
+                    exact
+                    path="/faq/como-logear"
+                    element={<ComoLogear />}
+                  />
+                  <Route
+                    exact
+                    path="/faq/como-mayorista"
+                    element={<ComoMayorista />}
+                  />
+                  <Route
+                    exact
+                    path="/faq/como-cancelo"
+                    element={<ComoCancelo />}
+                  />
+                  <Route
+                    exact
+                    path="/faq/metodosPago"
+                    element={<MetodosPago />}
+                  />
                   <Route
                     exact
                     path="/productos/:prodId"
                     element={<ItemDetail />}
                   />
+                  <Route path="/carrito" element={<CartDetail />} />
+
                   <Route
-                    exact
-                    path="/carrito/:cartId"
-                    element={
-                  <ProtectedRoute>
-                    <CartDetail />
-                   </ProtectedRoute> 
-                    }
-                  />
-                  <Route
-                    exact
-                    path="/checkout/:cartId"
+                    path="/checkout"
                     element={
                       <ProtectedRoute>
                         <Checkout />
@@ -77,6 +88,7 @@ function App() {
                     }
                   />
                 </Routes>
+                <WpButton />
               </main>
               <Footer />
             </div>

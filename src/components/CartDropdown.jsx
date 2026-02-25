@@ -17,19 +17,60 @@ const CartDropdown = ({ onClose }) => {
       const details = await Promise.all(
         products.map(async (item) => {
           console.log("CartDropdown - item:", item);
-          if (item.product && item.product.name) return item;
-          // If not populated, fetch the product
-          try {
-            const productId = item.product_id || item.product || item._id;
-            console.log("Fetching product:", productId);
-            const res = await axiosInstance.get(`/api/products/${productId}`);
-            console.log("Fetched product:", res.data);
-            return { ...item, product: res.data };
-          } catch (error) {
-            console.error("Error fetching product:", error);
+
+          // Si el producto ya tiene datos completos
+          if (
+            item.product &&
+            typeof item.product === "object" &&
+            item.product.name
+          ) {
             return item;
           }
-        })
+
+          // Intentar extraer el ID del producto
+          let productId = null;
+
+          if (item.product && typeof item.product === "string") {
+            // El servidor mandó solo el ID del producto
+            productId = item.product;
+          } else if (
+            item.product &&
+            typeof item.product === "object" &&
+            (item.product._id || item.product.id)
+          ) {
+            // El servidor mandó un objeto con datos pero incompleto
+            productId = item.product._id || item.product.id;
+          } else if (item.product_id) {
+            productId = item.product_id;
+          } else if (item._id || item.id) {
+            // Fallback a item._id si no hay product info
+            productId = item._id || item.id;
+          }
+
+          if (!productId) {
+            console.warn("No productId found for item:", item);
+            return item;
+          }
+
+          // Solo fetch si no tenemos datos completos
+          if (
+            !item.product ||
+            typeof item.product !== "object" ||
+            !item.product.name
+          ) {
+            try {
+              console.log("Fetching product:", productId);
+              const res = await axiosInstance.get(`/api/products/${productId}`);
+              console.log("Fetched product:", res.data);
+              return { ...item, product: res.data };
+            } catch (error) {
+              console.error("Error fetching product:", error);
+              return item;
+            }
+          }
+
+          return item;
+        }),
       );
       setProductsWithDetails(details);
     };
@@ -57,7 +98,8 @@ const CartDropdown = ({ onClose }) => {
   }, [onClose]);
 
   const total = productsWithDetails.reduce((acc, item) => {
-    const product = item.product || item;
+    const product =
+      item.product && typeof item.product === "object" ? item.product : item;
     const price = product.precio || 0;
     const quantity = item.quantity || 1;
     return acc + price * quantity;
@@ -80,18 +122,38 @@ const CartDropdown = ({ onClose }) => {
         <>
           <div className="cart-dropdown-items">
             {productsWithDetails.map((item) => {
-              const product = item.product || item;
-              const id = product._id || product.id;
+              // Obtener el objeto producto
+              const product =
+                item.product && typeof item.product === "object"
+                  ? item.product
+                  : item;
+
+              // Extraer el ID del producto - primero del product, luego del item como fallback
+              let productId = null;
+              if (item.product && typeof item.product === "string") {
+                productId = item.product;
+              } else if (product._id) {
+                productId = product._id;
+              } else if (product.id) {
+                productId = product.id;
+              } else if (item.product_id) {
+                productId = item.product_id;
+              } else if (item._id) {
+                productId = item._id;
+              } else if (item.id) {
+                productId = item.id;
+              }
+
+              const id = productId;
               const name = product.name || "Producto";
               const quantity = item.quantity || 1;
               const price = product.precio || 0;
-              const imagen = Array.isArray(product.imagen) ? product.imagen[0] : product.imagen;
+              const imagen = Array.isArray(product.imagen)
+                ? product.imagen[0]
+                : product.imagen;
 
               return (
-                <div
-                  className="cart-dropdown-item"
-                  key={id || Math.random()}
-                >
+                <div className="cart-dropdown-item" key={id || Math.random()}>
                   <img
                     src={getImageUrl(imagen)}
                     alt={name}
@@ -108,11 +170,7 @@ const CartDropdown = ({ onClose }) => {
                       </span>
                       <svg
                         onClick={() =>
-                          updateProductQuantity(
-                            cart._id,
-                            product._id,
-                            quantity - 1,
-                          )
+                        updateProductQuantity(productId, quantity - 1)
                         }
                         xmlns="http://www.w3.org/2000/svg"
                         width="16"
@@ -135,11 +193,11 @@ const CartDropdown = ({ onClose }) => {
             <div className="cart-dropdown-footer-buttons">
               <button
                 className="cart-dropdown-clear"
-                onClick={() => clearCart(cart._id)}
+                onClick={() => clearCart(null)}
               >
                 Limpiar carrito
               </button>
-              <Link to={`/carrito/${cart._id}`} onClick={onClose}>
+              <Link to={`/carrito`} onClick={onClose}>
                 <button className="cart-dropdown-checkout">
                   Ir al carrito
                 </button>

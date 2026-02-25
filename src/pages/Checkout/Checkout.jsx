@@ -12,19 +12,9 @@ import Envio from "./Envio.jsx";
 import Confirmar from "./Confirmar.jsx";
 
 const Checkout = () => {
-  const { cartId } = useParams();
   const navigate = useNavigate();
-  const { getCartById, clearCart } = useCart();
+  const { cart, getCart, clearCart } = useCart();
   const { user } = useContext(AuthContext);
-
-  const buildHeaders = () => {
-    const headers = {};
-    if (user?.token) {
-      headers.Authorization = `Bearer ${user.token}`;
-    }
-    return headers;
-  };
-  const [cart, setCart] = useState(null);
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
@@ -45,14 +35,20 @@ const Checkout = () => {
   const [errors, setErrors] = useState({});
   const [confirmAccepted, setConfirmAccepted] = useState(false);
 
+  const buildHeaders = () => {
+    const headers = {};
+    if (user?.token) {
+      headers.Authorization = `Bearer ${user.token}`;
+    }
+    return headers;
+  };
+
   useEffect(() => {
     const fetchCart = async () => {
       try {
         setLoading(true);
-        const data = await getCartById(cartId);
-        setCart(data);
+        await getCart();
 
-        // Pre-llenar datos del usuario si está autenticado
         if (user) {
           setFormData((prev) => ({
             ...prev,
@@ -67,13 +63,14 @@ const Checkout = () => {
           title: "Error",
           text: "No se pudo cargar el carrito",
         });
-        navigate(`/carrito/${cartId}`);
+        navigate("/carrito");
       } finally {
         setLoading(false);
       }
     };
+
     fetchCart();
-  }, [cartId, getCartById, navigate, user]);
+  }, [getCart, navigate, user]);
 
   const validateStep = (step) => {
     const newErrors = {};
@@ -239,7 +236,7 @@ const Checkout = () => {
 
       // Vaciar el carrito después de una compra exitosa
       try {
-        await clearCart(cartId);
+        await clearCart(cart?._id || null);
       } catch (clearError) {
         console.error("Error al vaciar el carrito:", clearError);
         // No bloqueamos el flujo si falla el clearCart, solo lo registramos

@@ -59,8 +59,17 @@ const ItemDetail = () => {
 
   const handleAddToCart = (productId) => {
     const quantity = 1;
-    addProductToCart(productId, quantity);
-        Swal.fire({
+    // Pasar los datos del producto para carrito local
+    const productData = product ? {
+      _id: product._id || product.id,
+      id: product._id || product.id,
+      name: product.name,
+      precio: product.precio,
+      imagen: product.imagen || product.imagenes?.[0],
+      imagenes: product.imagenes,
+    } : null;
+    addProductToCart(productId, quantity, productData);
+    Swal.fire({
       icon: 'success',
       title: 'Producto agregado al carrito',
       text: 'El producto ha sido agregado al carrito correctamente',
