@@ -96,8 +96,8 @@
 .categorias-btn {
   display: none;
   padding: 10px 16px;
-  border: 1px solid #ddd;
-  background: white;
+  border: none;
+  background-color: #e5d4c4;
   cursor: pointer;
   font-weight: 500;
 }
@@ -106,7 +106,7 @@
 }
 
 /* 📱 Mobile */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .hamburger-btn {
     display: block;
     color: #ffffff;
