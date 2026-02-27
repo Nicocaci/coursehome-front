@@ -33,7 +33,7 @@
 
 .foto-container {
     width: 100%;
-    height: 100vh;
+    height: 100vh;   /* 👈 CLAVE */
     overflow: hidden;
     position: relative;
 }
@@ -42,6 +42,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    display: block; /* evita espacio inline */
 }
 
 .foto-home {
@@ -299,6 +300,7 @@
 }
 
 @media (max-width: 1740px) {
+
     .titulo-ofertas {
         width: 65%;
     }
@@ -330,7 +332,11 @@
         height: 350px;
     }
 }
-
+@media (max-width: 840px) {
+    .foto-container {
+        height: 60dvh;
+    }
+}
 @media (max-width: 768px) {
     .card-container {
         height: auto;
@@ -381,10 +387,6 @@
 }
 
 @media (max-width: 480px) {
-    .foto-container {
-        height: 50dvh;
-    }
-
     .ofertas-container {
         padding: 20px;
         padding-top: 70px;
