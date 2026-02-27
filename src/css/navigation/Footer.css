@@ -25,7 +25,6 @@
 .container-iconos {
     display: flex;
     gap: 50px;
-    justify-content: center;
     cursor: pointer;
 }
 
@@ -39,12 +38,38 @@
     color: #000000;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1200px) {
     .footer-container {
+        padding: 50px 100px 50px 100px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .footer-container{
+        padding: 50px 100px 50px 100px;
+    }
+}
+@media (max-width: 1030px) {
+    .logo-footer {
+        width: 100px
+    }
+    .footer-container {
+        padding: 50px 100px 50px 0px;
+    }
+    .footer-container {
+        font-size: 12px;
+    }
+
+}
+@media (max-width: 810px) {
+        .footer-container {
         display: flex;
         flex-direction: column;
         padding: 20px;
     }
+}
+@media (max-width: 768px) {
+
     .logo-footer {
         width: 100px;
     }

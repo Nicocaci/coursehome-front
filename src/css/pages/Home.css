@@ -48,15 +48,17 @@
     height: 95dvh;
     width: 100%;
 }
+
 .ofertas-container {
-    padding:70px;
+    padding: 70px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     background-color: #000000;
 }
-.titulo-ofertas{
+
+.titulo-ofertas {
     color: #000000;
     background-color: #ffffff;
     border-radius: 10px;
@@ -66,6 +68,7 @@
     align-items: center;
 
 }
+
 .card-container {
     height: 70dvh;
     padding: 40px;
@@ -98,7 +101,6 @@
     gap: 50px;
     flex-direction: column;
     align-items: center;
-    height: 60dvh;
     background-color: #a29684;
 }
 
@@ -114,6 +116,7 @@
     gap: 30px;
     flex-wrap: wrap;
     justify-content: center;
+    padding: 50px;
 }
 
 
@@ -171,7 +174,7 @@
     background-position: center;
     /* centra la imagen */
     background-repeat: no-repeat;
-        position: relative;
+    position: relative;
     /* 🔴 CLAVE */
     overflow: hidden;
     /* opcional, queda más prolijo */
@@ -196,7 +199,7 @@
     background-position: center;
     /* centra la imagen */
     background-repeat: no-repeat;
-        position: relative;
+    position: relative;
     /* 🔴 CLAVE */
     overflow: hidden;
     /* opcional, queda más prolijo */
@@ -222,7 +225,7 @@
     background-position: center;
     /* centra la imagen */
     background-repeat: no-repeat;
-        position: relative;
+    position: relative;
     /* 🔴 CLAVE */
     overflow: hidden;
     /* opcional, queda más prolijo */
@@ -271,7 +274,7 @@
 
 .btn-contacto {
     padding: 10px 20px;
-    background-color:  #C2B280;
+    background-color: #C2B280;
     color: white;
     border: none;
     border-radius: 5px;
@@ -293,6 +296,39 @@
 
 .subtitulo-contacto {
     font-size: 18px;
+}
+
+@media (max-width: 1740px) {
+    .titulo-ofertas {
+        width: 65%;
+    }
+    .titulo-ofertas {
+        width: 65%;
+    }
+
+    .card-container {
+        height: auto;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scroll-behavior: smooth;
+        padding: 20px 10px;
+        gap: 15px;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        -webkit-overflow-scrolling: touch;
+        scroll-snap-type: x mandatory;
+        width: 90%;
+    }
+
+    .card {
+        flex-shrink: 0;
+        width: 280px;
+        scroll-snap-align: start;
+    }
+
+    .img-card {
+        height: 350px;
+    }
 }
 
 @media (max-width: 768px) {
@@ -319,22 +355,26 @@
     .img-card {
         height: 350px;
     }
+
     .categories-container {
         height: max-content;
         padding: 20px;
     }
+
     .card-categories-container {
         display: grid;
         grid-template-columns: 1fr 1fr;
     }
+
     .titulo-categories {
         font-size: 20px;
     }
+
     .card-categories-cocina,
     .card-categories-deco,
     .card-categories-jardin,
     .card-categories-mesa,
-    .card-categories-textiles{
+    .card-categories-textiles {
         width: 150px;
         height: 180px;
     }
@@ -344,11 +384,13 @@
     .foto-container {
         height: 50dvh;
     }
+
     .ofertas-container {
         padding: 20px;
         padding-top: 70px;
     }
-    .titulo-ofertas{
+
+    .titulo-ofertas {
         width: 90%;
         font-size: 16px;
     }

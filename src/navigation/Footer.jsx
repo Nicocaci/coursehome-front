@@ -28,7 +28,7 @@ const Footer = () => {
       <div>
         <p className="titulo-footer">Contacto</p>
         <ul className="li-footer">
-          <li>course-home@gmail.com</li>
+          <li>cfhomeydeco@gmail.com</li>
           <li>+549 1173660802</li>
         </ul>
         <p className="titulo-footer">Redes Sociales</p>
