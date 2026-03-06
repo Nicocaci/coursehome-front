@@ -227,7 +227,8 @@ const Checkout = () => {
         user: user._id,
         products: products,
         total: calculateTotal(),
-        status: "pendiente", // El backend lo establece por defecto, pero lo enviamos explícitamente
+        paymentMethod: formData.metodoPago,
+        status: "pendiente",
       };
 
       const response = await axiosInstance.post("/api/orders", orderData, {
@@ -250,7 +251,11 @@ const Checkout = () => {
       });
 
       // Redirigir a la página de agradecimiento
-      navigate("/gracias");
+      navigate("/gracias", {
+        state: {
+          order: response.data,
+        },
+      });
     } catch (error) {
       console.error("Error al procesar el pedido:", {
         status: error.response?.status,

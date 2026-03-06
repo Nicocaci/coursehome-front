@@ -16,6 +16,7 @@ import ComoCancelo from "./pages/Faq/ComoCancelo.jsx";
 import MetodosPago from "./pages/Faq/MetodosPago.jsx";
 import ProductosPage from "./pages/ProductosPage.jsx";
 import ScrollToTop from "./utils/ScrollToTop.jsx";
+import Gracias from "./pages/Gracias/Gracias.jsx";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext.jsx";
 import { CartProvider } from "./context/CartContext.jsx";
@@ -69,6 +70,7 @@ function App() {
                     element={<ItemDetail />}
                   />
                   <Route path="/carrito" element={<CartDetail />} />
+                  <Route path="/gracias" element={<Gracias />} />
 
                   <Route
                     path="/checkout"

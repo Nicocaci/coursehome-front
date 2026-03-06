@@ -6,6 +6,7 @@ import AdminProd from "./AdminProd.jsx";
 import "../../../css/pages/Perfiles/AdminProd.css";
 import AdminUserlist from "./AdminUserlist.jsx";
 import AdminOrder from "./AdminOrder.jsx";
+import AdminVentas from "./Ventas/AdminVentas.jsx";
 
 const AdminProfile = ({ user }) => {
   const { getUsers, getProfile, user: authUser } = useContext(AuthContext);
@@ -72,24 +73,39 @@ const AdminProfile = ({ user }) => {
         {/* Navegación de secciones para evitar scroll muy largos */}
         <div className="admin-nav">
           <button
-          type="button"
-          className={`admin-nav-btn ${activeSection === 'usuarios' ? 'active' : ''}`}
-          onClick={() => setActiveSection("usuarios")}
-          >Gestión de Usuarios
+            type="button"
+            className={`admin-nav-btn ${activeSection === "usuarios" ? "active" : ""}`}
+            onClick={() => setActiveSection("usuarios")}
+          >
+            Gestión de Usuarios
           </button>
-          <button type="button"
-          className={`admin-nav-btn ${activeSection === 'productos' ? 'active' : ''}`}
-          onClick={() => setActiveSection("productos")}
-          >Gestion de Productos</button>
-          <button type="button"
-          className={`admin-nav-btn ${activeSection === 'ordenes' ? 'active' : ''}`}
-          onClick={() => setActiveSection("ordenes")}
-          >Gestion de Órdenes</button>
+          <button
+            type="button"
+            className={`admin-nav-btn ${activeSection === "productos" ? "active" : ""}`}
+            onClick={() => setActiveSection("productos")}
+          >
+            Gestion de Productos
+          </button>
+          <button
+            type="button"
+            className={`admin-nav-btn ${activeSection === "ordenes" ? "active" : ""}`}
+            onClick={() => setActiveSection("ordenes")}
+          >
+            Gestion de Órdenes
+          </button>
+          <button
+            type="button"
+            className={`admin-nav-btn ${activeSection === "ventas" ? "active" : ""}`}
+            onClick={() => setActiveSection("ventas")}
+          >
+            Gestion de Ventas
+          </button>
         </div>
 
         {activeSection === "productos" && <AdminProd />}
         {activeSection === "usuarios" && <AdminUserlist />}
         {activeSection === "ordenes" && <AdminOrder />}
+        {activeSection === "ventas" && <AdminVentas />}
       </div>
     </>
   );
