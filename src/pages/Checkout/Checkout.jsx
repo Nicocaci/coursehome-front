@@ -205,6 +205,15 @@ const Checkout = () => {
       return;
     }
 
+    /**
+     * SI EL PAGO ES CON MERCADO PAGO
+     * NO CREAR ORDEN DESDE EL FRONT
+     * LA CREA EL WEBHOOK
+     */
+    if (formData.metodoPago === "mercadopago") {
+      return;
+    }
+
     setProcessing(true);
 
     try {
@@ -240,7 +249,6 @@ const Checkout = () => {
         await clearCart(cart?._id || null);
       } catch (clearError) {
         console.error("Error al vaciar el carrito:", clearError);
-        // No bloqueamos el flujo si falla el clearCart, solo lo registramos
       }
 
       await Swal.fire({
@@ -250,7 +258,6 @@ const Checkout = () => {
         confirmButtonColor: "#108202",
       });
 
-      // Redirigir a la página de agradecimiento
       navigate("/gracias", {
         state: {
           order: response.data,
@@ -262,6 +269,7 @@ const Checkout = () => {
         data: error.response?.data,
         message: error.message,
       });
+
       Swal.fire({
         icon: "error",
         title: "Error",

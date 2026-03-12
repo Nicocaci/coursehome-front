@@ -108,7 +108,7 @@ const CartDropdown = ({ onClose }) => {
   return (
     <div className="cart-dropdown" ref={dropdownRef}>
       <div className="cart-dropdown-header">
-        <h4>Mi carrito</h4>
+        <h4 className="titulo-cartdropdown">Mi carrito</h4>
         <button className="cart-dropdown-close" onClick={onClose}>
           ×
         </button>

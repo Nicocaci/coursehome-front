@@ -7,7 +7,6 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   padding: 10px;
   z-index: 1000;
-
 }
 
 .cart-dropdown-close {
@@ -26,14 +25,28 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
-
+.titulo-cartdropdown {
+  margin-bottom: 10px;
+}
 .cart-dropdown-item {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  gap: 20px;
+  border-radius: 12px;
+  padding: 10px;
 }
-
+.cart-dropdown-item:hover {
+  cursor: pointer;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  background-color: #e6e4e473;
+}
 .cart-dropdown-info {
   display: flex;
   flex-direction: column;
@@ -120,13 +133,13 @@
     overflow-y: auto;
     z-index: 9999;
   }
-    .cart-dropdown-image {
+  .cart-dropdown-image {
     width: 90px;
     height: 60px;
     object-fit: cover;
     border-radius: 6px;
   }
-  .cart-dropdown-item{
+  .cart-dropdown-item {
     gap: 20px;
   }
   .cart-dropdown-footer {
@@ -134,10 +147,10 @@
     padding: 15px;
   }
   .cart-dropdown-clear {
-  font-size: 12px      
+    font-size: 12px;
   }
   .cart-dropdown-checkout {
-  font-size: 12px    
+    font-size: 12px;
   }
   .label-checkout {
     font-size: 15px;

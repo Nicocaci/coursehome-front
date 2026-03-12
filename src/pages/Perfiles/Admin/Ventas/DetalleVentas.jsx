@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axiosInstance from "../../../../utils/axiosConfig.js";
 
-function DetalleVentas() {
+function DetalleVentas({refresh}) {
   const [stats, setStats] = useState(null);
 
   useEffect(() => {
@@ -9,7 +9,7 @@ function DetalleVentas() {
       .get("/api/orders/stats")
       .then((res) => setStats(res.data))
       .catch((err) => console.error(err));
-  }, []);
+  }, [refresh]);
 
   if (!stats) return <p>Cargando...</p>;
 
@@ -17,7 +17,17 @@ function DetalleVentas() {
     <div className="stats-grid">
       <div className="stat-card">
         <h3>Total Ventas</h3>
-        <p>${stats.totalRevenue}</p>
+        <p>${stats.totalRevenue.toLocaleString('es-AR')}</p>
+      </div>
+
+      <div className="stat-card">
+        <h3>Ventas Efectivo</h3>
+        <p>${stats.salesByPaymentMethod.efectivo.toLocaleString('es-AR')}</p>
+      </div>
+
+      <div className="stat-card">
+        <h3>Ventas MercadoPago</h3>
+        <p>${stats.salesByPaymentMethod.mercadopago.toLocaleString('es-AR')}</p>
       </div>
 
       <div className="stat-card">
@@ -48,15 +58,6 @@ function DetalleVentas() {
       <div className="stat-card">
         <h3>Cancelados</h3>
         <p>{stats.ordersByStatus.cancelado}</p>
-      </div>
-      <div className="stat-card">
-        <h3>Ventas MercadoPago</h3>
-        <p>${stats.salesByPaymentMethod.mercadopago}</p>
-      </div>
-
-      <div className="stat-card">
-        <h3>Ventas Efectivo</h3>
-        <p>${stats.salesByPaymentMethod.efectivo}</p>
       </div>
     </div>
   );

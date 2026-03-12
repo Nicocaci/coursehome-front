@@ -1,25 +1,30 @@
-import React from 'react';
-import DetalleVentas from './DetalleVentas.jsx';
-import UltimasOrdenes from './UltimasOrdenes.jsx';
-import '../../../../css/pages/Perfiles/AdminOrder.css'
+import React, { useState } from "react";
+import DetalleVentas from "./DetalleVentas.jsx";
+import UltimasOrdenes from "./UltimasOrdenes.jsx";
+import "../../../../css/pages/Perfiles/AdminOrder.css";
 
 const AdminVentas = () => {
+  const [refreshStats, setRefreshStats] = useState(false);
+
+  const handleOrderUpdated = () => {
+    setRefreshStats((prev) => !prev);
+  };
+
   return (
-    <div className='admin-section'>
+    <div className="admin-section">
+      <div>
+        <p className="titulo-admin-section">Dashboard Ventas</p>
+
         <div>
-            <p className='titulo-admin-section'> 
-                Dashboard Ventas
-            </p>
-            <div>
-              <DetalleVentas />
-            </div>
-            <div>
-              <UltimasOrdenes />
-            </div>
+          <DetalleVentas refresh={refreshStats} />
         </div>
 
+        <div>
+          <UltimasOrdenes onOrderUpdated={handleOrderUpdated} />
+        </div>
+      </div>
     </div>
-  )
-}
+  );
+};
 
 export default AdminVentas;

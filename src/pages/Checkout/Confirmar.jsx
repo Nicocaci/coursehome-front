@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { initMercadoPago, Wallet } from '@mercadopago/sdk-react';
+import { initMercadoPago, Wallet } from "@mercadopago/sdk-react";
 import axios from "axios";
 import { getImageUrl } from "../../utils/imageUtils.js";
 import axiosInstance from "../../utils/axiosConfig.js";
@@ -44,9 +44,11 @@ const Confirmar = ({
             console.error("Error fetching product:", error);
             return item;
           }
-        })
+        }),
       );
-      setProductsWithDetails(details.filter(item => (item.quantity || 0) > 0));
+      setProductsWithDetails(
+        details.filter((item) => (item.quantity || 0) > 0),
+      );
     };
     if (products.length > 0) {
       fetchProducts();
@@ -55,7 +57,6 @@ const Confirmar = ({
     }
   }, [cart]);
 
-  // Crear preference en el backend
   const createPreferenceIdFromApi = async () => {
     try {
       setLoading(true);
@@ -70,15 +71,9 @@ const Confirmar = ({
             email: formData.email,
           },
         },
-        {
-          headers: { "Content-Type": "application/json" },
-        },
       );
 
-      // 👇 USAMOS SANDBOX
-      const sandboxInitPoint = response.data.sandbox_init_point;
-
-      window.location.href = sandboxInitPoint;
+      setPreferenceId(response.data.preferenceId);
     } catch (error) {
       console.error("Error creando la preference de MP", error);
     } finally {
@@ -136,11 +131,18 @@ const Confirmar = ({
             ) : (
               productsWithDetails.map((item) => {
                 const product = item.product || item;
-                const productId = item.product_id || (typeof item.product === 'string' ? item.product : item.product?._id) || item._id;
+                const productId =
+                  item.product_id ||
+                  (typeof item.product === "string"
+                    ? item.product
+                    : item.product?._id) ||
+                  item._id;
                 const name = product.name || "Producto";
                 const price = product.precio || 0;
                 const quantity = item.quantity || 1;
-                const imagen = Array.isArray(product.imagen) ? product.imagen[0] : product.imagen;
+                const imagen = Array.isArray(product.imagen)
+                  ? product.imagen[0]
+                  : product.imagen;
 
                 return (
                   <div key={productId} className="checkout-product-item">
@@ -153,9 +155,7 @@ const Confirmar = ({
                       }}
                     />
                     <div className="checkout-product-info">
-                      <span className="checkout-product-name">
-                        {name}
-                      </span>
+                      <span className="checkout-product-name">{name}</span>
                       <span className="checkout-product-quantity">
                         x{quantity}
                       </span>

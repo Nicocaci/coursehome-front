@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axiosInstance from "../../../../utils/axiosConfig.js";
 
-function UltimasOrdenes() {
+function UltimasOrdenes({ onOrderUpdated }) {
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
@@ -13,38 +13,28 @@ function UltimasOrdenes() {
       .catch((err) => console.error(err));
   }, []);
 
-  const updateStatus = async (orderId, newStatus) => {
-    try {
-      // actualizar visualmente primero
-      setOrders((prev) =>
-        prev.map((order) =>
-          order._id === orderId ? { ...order, status: newStatus } : order,
-        ),
-      );
-
-      // luego llamar al backend
-      await axiosInstance.put(`/api/orders/${orderId}/status`, {
-        status: newStatus,
-      });
-    } catch (error) {
-      console.error("Error actualizando estado", error);
-    }
-  };
   const updateOrderStatus = async (orderId, newStatus) => {
-    try {
-      // actualizar visualmente primero
-      setOrders((prev) =>
-        prev.map((order) =>
-          order._id === orderId ? { ...order, status: newStatus } : order,
-        ),
-      );
+    const previousOrders = [...orders];
 
-      // luego llamar al backend
+    // actualizar visualmente
+    setOrders((prev) =>
+      prev.map((order) =>
+        order._id === orderId ? { ...order, status: newStatus } : order,
+      ),
+    );
+
+    try {
       await axiosInstance.put(`/api/orders/${orderId}/status`, {
         status: newStatus,
       });
+      if (onOrderUpdated) {
+        onOrderUpdated();
+      }
     } catch (error) {
       console.error("Error actualizando estado", error);
+
+      // rollback si falla
+      setOrders(previousOrders);
     }
   };
 

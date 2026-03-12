@@ -5,7 +5,6 @@ import Swal from "sweetalert2";
 import AdminProd from "./AdminProd.jsx";
 import "../../../css/pages/Perfiles/AdminProd.css";
 import AdminUserlist from "./AdminUserlist.jsx";
-import AdminOrder from "./AdminOrder.jsx";
 import AdminVentas from "./Ventas/AdminVentas.jsx";
 
 const AdminProfile = ({ user }) => {
@@ -88,13 +87,6 @@ const AdminProfile = ({ user }) => {
           </button>
           <button
             type="button"
-            className={`admin-nav-btn ${activeSection === "ordenes" ? "active" : ""}`}
-            onClick={() => setActiveSection("ordenes")}
-          >
-            Gestion de Órdenes
-          </button>
-          <button
-            type="button"
             className={`admin-nav-btn ${activeSection === "ventas" ? "active" : ""}`}
             onClick={() => setActiveSection("ventas")}
           >
@@ -104,7 +96,6 @@ const AdminProfile = ({ user }) => {
 
         {activeSection === "productos" && <AdminProd />}
         {activeSection === "usuarios" && <AdminUserlist />}
-        {activeSection === "ordenes" && <AdminOrder />}
         {activeSection === "ventas" && <AdminVentas />}
       </div>
     </>
