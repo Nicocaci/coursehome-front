@@ -47,6 +47,7 @@ function UltimasOrdenes({ onOrderUpdated }) {
           <th>Orden</th>
           <th>Cliente</th>
           <th>Total</th>
+          <th>Metodo Pago</th>
           <th>Estado</th>
           <th>Fecha</th>
         </tr>
@@ -64,6 +65,8 @@ function UltimasOrdenes({ onOrderUpdated }) {
             </td>
 
             <td>${order.total}</td>
+
+            <td>{order.paymentMethod}</td>
 
             <td>
               <select
