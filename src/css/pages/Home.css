@@ -60,8 +60,7 @@
 }
 
 .titulo-ofertas {
-    color: #000000;
-    background-color: #ffffff;
+    color: #ffffff;
     border-radius: 10px;
     width: 40%;
     display: flex;
@@ -370,6 +369,8 @@
     .card-categories-container {
         display: grid;
         grid-template-columns: 1fr 1fr;
+        padding: 0;
+        gap: 10px;
     }
 
     .titulo-categories {
