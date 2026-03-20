@@ -1,19 +1,75 @@
-# React + Vite
+🛒 CF Home & Deco
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+E-commerce full-stack desarrollado de punta a punta, enfocado en brindar una experiencia de compra simple, rápida y moderna.
+La aplicación se encuentra actualmente en producción, permitiendo a los usuarios interactuar con una plataforma real que integra frontend, backend y servicios externos.
 
-Currently, two official plugins are available:
+🚀 Demo
+🔗 [Link a la aplicación en producción]
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+📌 Descripción
 
-## React Compiler
+CF Home & Deco es una aplicación de comercio electrónico que permite a los usuarios:
+Explorar un catálogo dinámico de productos
+Gestionar un carrito de compras
+Realizar compras mediante una pasarela de pago integrada
+El sistema está diseñado bajo una arquitectura full-stack desacoplada, utilizando una API REST para la comunicación entre cliente y servidor.
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+🛠️ Tecnologías utilizadas
+Frontend
+React
+Axios
+CSS / Tailwind
+Backend
+Node.js
+Express
+Base de datos
+MongoDB
+Integraciones
+Mercado Pago (pagos online)
+API REST
 
-Note: This will impact Vite dev & build performances.
+✨ Funcionalidades principales
+🛍️ Catálogo dinámico de productos
+🛒 Carrito de compras interactivo
+💳 Checkout paso a paso optimizado para UX
+📦 Gestión de órdenes de compra
+🧑‍💼 Panel administrativo para control de:
+Productos
+Pedidos
+🧩 Arquitectura
+El proyecto sigue una arquitectura basada en API REST, con separación clara de responsabilidades:
+Frontend: interfaz de usuario
+Backend: lógica de negocio y endpoints
+Base de datos: persistencia de información
+Esto permite escalabilidad, mantenibilidad y una integración eficiente con servicios externos.
+☁️ Producción
+La aplicación está desplegada y funcionando en un entorno productivo, incluyendo:
+Frontend accesible para usuarios
+Backend conectado a base de datos
+Integración activa con Mercado Pago
 
-## Expanding the ESLint configuration
+⚠️ Nota:
+Por motivos de seguridad y protección de información sensible (tokens, credenciales y lógica interna), no se proporciona configuración para ejecución local del proyecto.
+🔐 Seguridad
+Se implementaron buenas prácticas para proteger la aplicación:
+Manejo de variables de entorno para credenciales sensibles
+Integración segura con servicios externos
+Separación de responsabilidades entre frontend y backend
+📸 Screenshots
+(Podés agregar imágenes del proyecto acá para sumar impacto visual)
+📈 Aprendizajes
+Este proyecto me permitió profundizar en:
+Desarrollo Full Stack end-to-end
+Integración de APIs externas (Mercado Pago)
+Arquitectura escalable basada en REST
+Manejo de estado en aplicaciones React
+Deploy de aplicaciones en producción
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
-"# coursehome-front" 
+🤝 Contacto
+Si te interesa el proyecto o querés conectar:
+LinkedIn: [tu link]
+Email: [tu mail]
+
+⭐ Feedback
+Siempre abierto a sugerencias, mejoras o colaboraciones.
+¡Cualquier feedback es bienvenido!
