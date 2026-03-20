@@ -14,7 +14,7 @@ La aplicación se encuentra actualmente **en producción**, permitiendo a los us
 
 ## 🚀 Demo
 
-👉 [https;//www.cfhomedeco.com](#)
+👉 [Ver aplicación en producción](https://cfhomedeco.com)
 
 ---
 
