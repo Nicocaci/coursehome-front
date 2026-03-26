@@ -71,8 +71,10 @@ const AdminUserlist = ({ user }) => {
   if (loading) {
     return (
       <div className="admin-section">
-        <p className="titulo-admin-section">Gestión de Usuarios</p>
-        <p>Cargando usuarios...</p>
+        <div className="spinner-container">
+          <div className="spinner"></div>
+          <p>Cargando Usuarios</p>
+        </div>
       </div>
     );
   }

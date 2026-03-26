@@ -78,7 +78,9 @@
 .li-volver-productos:hover {
   text-decoration: underline;
 }
-@media (max-width: 1200px){
+
+
+@media (max-width: 1200px) {
   .product-detail-section {
     width: 90%;
   }

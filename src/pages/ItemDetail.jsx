@@ -56,24 +56,25 @@ const ItemDetail = () => {
     fetchProduct();
   }, [prodId]);
 
-
   const handleAddToCart = (productId) => {
     const quantity = 1;
     // Pasar los datos del producto para carrito local
-    const productData = product ? {
-      _id: product._id || product.id,
-      id: product._id || product.id,
-      name: product.name,
-      precio: product.precio,
-      imagen: product.imagen || product.imagenes?.[0],
-      imagenes: product.imagenes,
-    } : null;
+    const productData = product
+      ? {
+          _id: product._id || product.id,
+          id: product._id || product.id,
+          name: product.name,
+          precio: product.precio,
+          imagen: product.imagen || product.imagenes?.[0],
+          imagenes: product.imagenes,
+        }
+      : null;
     addProductToCart(productId, quantity, productData);
     Swal.fire({
-      icon: 'success',
-      title: 'Producto agregado al carrito',
-      text: 'El producto ha sido agregado al carrito correctamente',
-      confirmButtonColor: '#28a745',
+      icon: "success",
+      title: "Producto agregado al carrito",
+      text: "El producto ha sido agregado al carrito correctamente",
+      confirmButtonColor: "#28a745",
       timer: 2500,
       showConfirmButton: true,
     });
@@ -81,7 +82,12 @@ const ItemDetail = () => {
   const descripcionFormateada = product?.descripcion?.replace(/\\n/g, "\n");
 
   if (loading) {
-    return <div>Cargando...</div>;
+    return (
+      <div className="spinner-container">
+        <div className="spinner"></div>
+        <p>Cargando...</p>
+      </div>
+    );
   }
   if (error) {
     return <div>{error}</div>;
@@ -89,7 +95,9 @@ const ItemDetail = () => {
 
   return (
     <div className="product-detail-section">
-      <Link className="li-volver-productos" to={'/productos'}>⬅ Volver a Productos</Link>
+      <Link className="li-volver-productos" to={"/productos"}>
+        ⬅ Volver a Productos
+      </Link>
       {product && (
         <div className="product-detail-grid">
           <div>
@@ -144,20 +152,20 @@ const ItemDetail = () => {
             </div>
             <div>
               {" "}
-              <strong>Descripción:</strong>
-            
-                {" "}
-                {descripcionFormateada.split("\n").map((linea, i) => (
-                  <p key={i}>{linea.trim()}</p>
-                ))}
-              
+              <strong>Descripción:</strong>{" "}
+              {descripcionFormateada.split("\n").map((linea, i) => (
+                <p key={i}>{linea.trim()}</p>
+              ))}
             </div>
             <div className="precio-container">
               <strong>Precio:</strong>
               <p>${product.precio}</p>
             </div>
             <div>
-              <button className="btn-agregar-carrito" onClick={() => handleAddToCart(product._id)}>
+              <button
+                className="btn-agregar-carrito"
+                onClick={() => handleAddToCart(product._id)}
+              >
                 Agregar al Carrito
               </button>
             </div>

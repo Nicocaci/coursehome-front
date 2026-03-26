@@ -38,7 +38,8 @@ function UltimasOrdenes({ onOrderUpdated }) {
     }
   };
 
-  if (!orders.length) return <p>Cargando órdenes...</p>;
+  if (!orders.length)
+    return <p>Cargando..</p>;
 
   return (
     <table className="orders-table">

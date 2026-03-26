@@ -176,13 +176,18 @@ const ProductosPage = () => {
 
         {/* MAIN */}
         <main className="products-main">
-          {loading && <p className="center">Cargando productos...</p>}
+          {loading && (
+            <div className="spinner-container">
+              <div className="spinner"></div>
+              <p>Cargando Productos</p>
+            </div>
+          )}
 
           {!loading && productos?.length === 0 && (
             <p>No hay productos disponibles.</p>
           )}
-
-          <div className="cards-container">
+          {!loading && (
+            <div className="cards-container">
             {productos?.map((p) => (
               <Link
                 className="li-none-black"
@@ -208,6 +213,8 @@ const ProductosPage = () => {
               </Link>
             ))}
           </div>
+          )}
+
 
           {pagination?.totalPages > 1 && (
             <div className="pagination">

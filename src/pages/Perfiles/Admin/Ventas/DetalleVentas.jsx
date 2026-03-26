@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axiosInstance from "../../../../utils/axiosConfig.js";
 
-function DetalleVentas({refresh}) {
+function DetalleVentas({ refresh }) {
   const [stats, setStats] = useState(null);
 
   useEffect(() => {
@@ -11,23 +11,29 @@ function DetalleVentas({refresh}) {
       .catch((err) => console.error(err));
   }, [refresh]);
 
-  if (!stats) return <p>Cargando...</p>;
+  if (!stats)
+    return (
+      <div className="spinner-container">
+        <div className="spinner"></div>
+        <p>Cargando Detalle de ventas</p>
+      </div>
+    );
 
   return (
     <div className="stats-grid">
       <div className="stat-card">
         <h3>Total Ventas</h3>
-        <p>${stats.totalRevenue.toLocaleString('es-AR')}</p>
+        <p>${stats.totalRevenue.toLocaleString("es-AR")}</p>
       </div>
 
       <div className="stat-card">
         <h3>Ventas Efectivo</h3>
-        <p>${stats.salesByPaymentMethod.efectivo.toLocaleString('es-AR')}</p>
+        <p>${stats.salesByPaymentMethod.efectivo.toLocaleString("es-AR")}</p>
       </div>
 
       <div className="stat-card">
         <h3>Ventas MercadoPago</h3>
-        <p>${stats.salesByPaymentMethod.mercadopago.toLocaleString('es-AR')}</p>
+        <p>${stats.salesByPaymentMethod.mercadopago.toLocaleString("es-AR")}</p>
       </div>
 
       <div className="stat-card">
