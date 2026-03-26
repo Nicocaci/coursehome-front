@@ -544,7 +544,7 @@ const AdminProd = ({ user }) => {
           enctype="multipart/form-data"
         >
           <div className="form-group">
-            <label htmlFor="sku">SKU *</label>
+            <label className="titulos-form" htmlFor="sku">SKU *</label>
             <input
               type="text"
               id="sku"

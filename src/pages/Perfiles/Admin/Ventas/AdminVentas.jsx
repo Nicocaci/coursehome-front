@@ -19,7 +19,7 @@ const AdminVentas = () => {
           <DetalleVentas refresh={refreshStats} />
         </div>
 
-        <div>
+        <div className="table-section-orders">
           <UltimasOrdenes onOrderUpdated={handleOrderUpdated} />
         </div>
       </div>

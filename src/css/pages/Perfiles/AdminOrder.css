@@ -79,6 +79,7 @@
   box-shadow: 0 6px 18px rgba(0,0,0,0.06);
 }
 
+
 .orders-table {
   width: 100%;
   border-collapse: collapse;
@@ -161,4 +162,10 @@
 .status-select.cancelado {
   background: #f8d7da;
   color: #721c24;
+}
+@media (max-width: 768px) {
+  .table-section-orders {
+  overflow: scroll;
+}
+
 }

@@ -34,7 +34,7 @@ const Footer = () => {
         <p className="titulo-footer">Redes Sociales</p>
         <div className="container-iconos">
           <div className="icono">
-            <Link to='https://www.instagram.com/ofcoursehome'>
+            <Link to='https://www.instagram.com/cfhome_/'>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="25"
